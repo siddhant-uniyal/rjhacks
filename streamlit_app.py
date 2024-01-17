@@ -1,5 +1,4 @@
 from transformers import pipeline
-import gradio as gr
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import nltk
 import numpy as np
@@ -78,8 +77,27 @@ def pipeline(input_text):
     else:
         return "Spam" , ""
 
-iface = gr.Interface(fn = pipeline , inputs=['text'] , outputs=['text' , 'text' , 'text'])
-iface.launch(share=True)
+def main():
+    st.title("Feedback Analysis App")
+
+    # Input text box for user feedback
+    user_input = st.text_area("Enter your feedback:")
+
+    if st.button("Analyze Feedback"):
+        if user_input:
+            result_type, sentiment_score, classification = pipeline(user_input)
+            
+            st.subheader("Analysis Result:")
+            st.write(f"Type: {result_type}")
+            
+            if sentiment_score != -1:
+                st.write(f"Sentiment Score: {sentiment_score}")
+
+            if classification:
+                st.write(f"Classification: {classification}")
+
+if __name__ == "__main__":
+    main()
 
 
 
